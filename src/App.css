@@ -1,0 +1,8 @@
+.container { max-width: 800px; margin: 40px auto; font-family: Arial, sans-serif; }
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+.tabs button { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; background: #f0f0f0; }
+.tabs button.active { background: #007bff; color: white; border-color: #007bff; }
+.form-group { display: flex; gap: 10px; margin-bottom: 20px; }
+.form-group input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+.form-group button { padding: 8px 16px; background: #28a745; color: white; border: none; cursor: pointer; }
+.tab-content { border: 1px solid #ddd; padding: 20px; border-radius: 6px; }
