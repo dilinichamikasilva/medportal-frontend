@@ -1,17 +1,25 @@
-# Step 1: Build the React app (Node 20 පාවිච්චි කිරීම)
-FROM node:20-alpine AS builder
+# Use Node.js 20
+FROM node:20-alpine
+
+# Set working directory
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy source code
 COPY . .
+
+# Build the app
 RUN npm run build
 
-# Step 2: Serve with a lightweight static server
-FROM node:20-alpine
-WORKDIR /app
+# Install a simple static server globally
 RUN npm install -g serve
-COPY --from=builder /app/dist /app/dist
 
-# Cloud Run expects the app to listen on the port provided by the PORT env variable
+# Expose the port Cloud Run expects (8080)
+ENV PORT=8080
 EXPOSE 8080
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-8080}"]
+
+# Start the app using the PORT environment variable
+CMD ["sh", "-c", "serve -s dist -l $PORT"]
