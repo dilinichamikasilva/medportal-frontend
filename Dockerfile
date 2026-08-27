@@ -1,25 +1,22 @@
-# Use Node.js 20
-FROM node:20-alpine
-
-# Set working directory
+# Stage 1: Build the React app
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy source code
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Install a simple static server globally
-RUN npm install -g serve
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
 
-# Expose the port Cloud Run expects (8080)
-ENV PORT=8080
+# Copy built files to Nginx public folder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Replace default Nginx port configuration to listen on $PORT (Cloud Run default: 8080)
+RUN sed -i 's/80/8080/g' /etc/nginx/conf.d/default.conf
+
+# Expose port 8080
 EXPOSE 8080
 
-# Start the app using the PORT environment variable
-CMD ["sh", "-c", "serve -s dist -l $PORT"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
